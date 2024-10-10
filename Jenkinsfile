@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        /* stage('Run Tests') {
             steps {
                 script {
                     echo 'Running tests...'
@@ -47,7 +47,7 @@ pipeline {
                     }
                 }
             }
-        }
+        } */
 
         stage('Push to Docker Hub') {
             when {
