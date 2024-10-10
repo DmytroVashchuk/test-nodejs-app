@@ -53,7 +53,7 @@ pipeline {
     steps {
         script {
             def IMAGE_NAME = 'dmytrovashchuk/test-nodejs-app'
-            def DOCKER_CREDENTIALS = 'docker-hub-credentials-id'
+            def DOCKER_CREDENTIALS = 'docker-hub-credentials'
             
             echo 'Pushing Docker image to Docker Hub...'
             docker.withRegistry('', DOCKER_CREDENTIALS) {
