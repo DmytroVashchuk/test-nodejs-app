@@ -1,17 +1,16 @@
 pipeline {
-  agent { label 'jenkins-worker' }
+  agent any  // Використовуємо будь-яку доступну ноду
 
   environment {
-    DOCKER_CREDENTIALS = 'docker-hub-credentials'
-    IMAGE_NAME = 'my-nodejs-app'
+    DOCKER_CREDENTIALS = 'docker-hub-credentials' // Ім'я ваших облікових даних Docker Hub у Jenkins
+    IMAGE_NAME = 'dmytrovashchuk/test-nodejs-app' // Ваш репозиторій на Docker Hub
   }
 
-  stages {
-    stage('Pull Code') {
-      steps {
-        git 'https://github.com/DmytroVashchuk/test-nodejs-app.git'
-      }
-    }
+  stage('Pull Code') {
+  steps {
+    git url: 'https://github.com/DmytroVashchuk/test-nodejs-app.git', branch: 'main', credentialsId: 'your-jenkins-credentials-id'
+  }
+}
 
     stage('Build Docker Image') {
       steps {
@@ -58,5 +57,10 @@ pipeline {
       }
     }
   }
-}
 
+  post {
+    failure {
+      echo "Pipeline failed!"
+    }
+  }
+}
