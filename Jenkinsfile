@@ -6,16 +6,20 @@ pipeline {
     IMAGE_NAME = 'dmytrovashchuk/test-nodejs-app' // Ваш репозиторій на Docker Hub
   }
 
-  stages { // Додаємо секцію stages
+  stages {
     stage('Pull Code') {
       steps {
-        git url: 'https://github.com/DmytroVashchuk/test-nodejs-app.git', branch: 'main', credentialsId: 'your-jenkins-credentials-id'
+        script {
+          echo 'Pulling code from GitHub...'
+          git url: 'https://github.com/DmytroVashchuk/test-nodejs-app.git', branch: 'main', credentialsId: 'your-jenkins-credentials-id'
+        }
       }
     }
 
     stage('Build Docker Image') {
       steps {
         script {
+          echo 'Building Docker Image...'
           docker.build(IMAGE_NAME)
         }
       }
@@ -24,8 +28,14 @@ pipeline {
     stage('Run Tests') {
       steps {
         script {
-          docker.image(IMAGE_NAME).inside {
-            sh 'npm test'
+          echo 'Running tests...'
+          try {
+            docker.image(IMAGE_NAME).inside {
+              sh 'npm test'
+            }
+          } catch (Exception e) {
+            currentBuild.result = 'FAILURE'
+            throw e
           }
         }
       }
@@ -33,13 +43,11 @@ pipeline {
 
     stage('Push to Docker Hub') {
       when {
-        branch 'main'
-        expression {
-          return currentBuild.result == null || currentBuild.result == 'SUCCESS'
-        }
+        branch 'main'  // Виконується лише на гілці 'main'
       }
       steps {
         script {
+          echo 'Pushing Docker image to Docker Hub...'
           docker.withRegistry('', DOCKER_CREDENTIALS) {
             docker.image(IMAGE_NAME).push()
           }
