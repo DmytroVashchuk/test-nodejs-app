@@ -6,11 +6,12 @@ pipeline {
     IMAGE_NAME = 'dmytrovashchuk/test-nodejs-app' // Ваш репозиторій на Docker Hub
   }
 
-  stage('Pull Code') {
-  steps {
-    git url: 'https://github.com/DmytroVashchuk/test-nodejs-app.git', branch: 'main', credentialsId: 'your-jenkins-credentials-id'
-  }
-}
+  stages { // Додаємо секцію stages
+    stage('Pull Code') {
+      steps {
+        git url: 'https://github.com/DmytroVashchuk/test-nodejs-app.git', branch: 'main', credentialsId: 'your-jenkins-credentials-id'
+      }
+    }
 
     stage('Build Docker Image') {
       steps {
