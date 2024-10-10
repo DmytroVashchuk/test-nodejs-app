@@ -50,19 +50,15 @@ pipeline {
         } */
 
         stage('Push to Docker Hub') {
-            when {
-                branch 'main'  // Виконується лише на гілці 'main'
-            }
-            steps {
-                script {
-                    echo 'Pushing Docker image to Docker Hub...'
-                    // Публікуємо Docker образ на Docker Hub
-                    docker.withRegistry('', DOCKER_CREDENTIALS) {
-                        docker.image(IMAGE_NAME).push()
-                    }
-                }
+    steps {
+        script {
+            echo 'Pushing Docker image to Docker Hub...'
+            docker.withRegistry('', DOCKER_CREDENTIALS) {
+                docker.image(IMAGE_NAME).push()
             }
         }
+    }
+}
 
         stage('Failure') {
             when {
