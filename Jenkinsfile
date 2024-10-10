@@ -52,9 +52,12 @@ pipeline {
         stage('Push to Docker Hub') {
     steps {
         script {
+            def IMAGE_NAME = 'dmytrovashchuk/test-nodejs-app'
+            def DOCKER_CREDENTIALS = 'docker-hub-credentials-id'
+            
             echo 'Pushing Docker image to Docker Hub...'
             docker.withRegistry('', DOCKER_CREDENTIALS) {
-                docker.image(IMAGE_NAME).push()
+                docker.image(IMAGE_NAME).push('latest')
             }
         }
     }
