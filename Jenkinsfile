@@ -21,8 +21,11 @@ pipeline {
             steps {
                 script {
                     echo 'Building Docker Image...'
+                    // Перевірка Docker
+                    sh 'docker --version'
+
                     // Створення Docker образу
-                    docker.build(IMAGE_NAME)
+                    sh 'docker build -t ${IMAGE_NAME} .'
                 }
             }
         }
