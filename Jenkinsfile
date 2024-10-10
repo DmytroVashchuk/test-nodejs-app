@@ -30,24 +30,24 @@ pipeline {
             }
         }
 
-        /* stage('Run Tests') {
-            steps {
-                script {
-                    echo 'Running tests...'
-                    try {
-                        // Запуск тестів всередині контейнера Docker
-                        docker.image(IMAGE_NAME).inside {
-                            sh 'npm test'
-                        }
-                    } catch (Exception e) {
-                        // Встановлюємо статус збірки як "FAILURE", якщо тести не пройшли
-                        currentBuild.result = 'FAILURE'
-                        // Викидаємо помилку, щоб зупинити пайплайн
-                        throw e
-                    }
-                }
+        stage('Run Tests') {
+    steps {
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            script {
+                echo 'Running tests...'
+                // Команди для запуску тестів
+                sh 'npm test' // або інша команда для тестування
             }
-        } */
+        }
+    }
+    post {
+        failure {
+            script {
+                echo 'Tests failed'
+            }
+        }
+    }
+}
 
         stage('Push to Docker Hub') {
     steps {
